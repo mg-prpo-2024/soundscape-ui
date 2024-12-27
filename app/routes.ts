@@ -4,5 +4,6 @@ import { remixRoutesOptionAdapter } from "@react-router/remix-routes-option-adap
 export default remixRoutesOptionAdapter((defineRoutes) => {
   return defineRoutes((route) => {
     route("/", "routes/home.tsx", { index: true });
+    route("/login", "routes/login.tsx");
   });
 }) satisfies RouteConfig;
