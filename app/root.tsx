@@ -1,11 +1,5 @@
-import {
-  Links,
-  Meta,
-  Outlet,
-  Scripts,
-  ScrollRestoration,
-} from "@remix-run/react";
-import type { LinksFunction } from "@remix-run/node";
+import { Links, Meta, Outlet, Scripts, ScrollRestoration } from "react-router";
+import type { LinksFunction } from "react-router";
 
 import "./tailwind.css";
 
@@ -23,9 +17,7 @@ export const links: LinksFunction = () => [
 ];
 
 function initTheme() {
-  const theme = window.matchMedia(`(prefers-color-scheme: dark)`).matches
-    ? `dark`
-    : `light`;
+  const theme = window.matchMedia(`(prefers-color-scheme: dark)`).matches ? `dark` : `light`;
   document.documentElement.classList.add(theme);
 }
 
@@ -35,9 +27,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <script
-          suppressHydrationWarning
-        >{`(${initTheme.toString()})()`}</script>
+        <script suppressHydrationWarning>{`(${initTheme.toString()})()`}</script>
         <Meta />
         <Links />
       </head>

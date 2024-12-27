@@ -1,11 +1,8 @@
-import type { MetaFunction } from "@remix-run/node";
+import type { MetaFunction } from "react-router";
 import { Button } from "~/components/ui/button";
 
 export const meta: MetaFunction = () => {
-  return [
-    { title: "SoundScape" },
-    { name: "description", content: "Music app" },
-  ];
+  return [{ title: "SoundScape" }, { name: "description", content: "Music app" }];
 };
 
 export default function Index() {
