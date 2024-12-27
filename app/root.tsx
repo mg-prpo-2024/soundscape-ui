@@ -1,5 +1,6 @@
 import { Links, Meta, Outlet, Scripts, ScrollRestoration } from "react-router";
 import type { LinksFunction } from "react-router";
+import { Auth0Provider } from "@auth0/auth0-react";
 
 import "./tailwind.css";
 
@@ -41,5 +42,15 @@ export function Layout({ children }: { children: React.ReactNode }) {
 }
 
 export default function App() {
-  return <Outlet />;
+  return (
+    <Auth0Provider
+      domain="dev-2piaq4s.us.auth0.com"
+      clientId="C1yEUyfPTGICJC7xBwydqj3N7P3KiAFp"
+      authorizationParams={{
+        redirect_uri: typeof window !== "undefined" ? window.location.origin : "",
+      }}
+    >
+      <Outlet />
+    </Auth0Provider>
+  );
 }
