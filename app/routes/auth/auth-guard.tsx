@@ -20,6 +20,7 @@ export default function AuthenticationGuard({ children }: { children: React.Reac
     ),
     {
       onRedirecting: () => <div>redirecting...</div>,
+      returnTo: window.location.pathname,
     },
   );
   return <Component />;
