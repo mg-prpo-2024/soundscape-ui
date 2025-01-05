@@ -1,8 +1,7 @@
-import ky from "ky";
-import { getAccessToken } from "~/services/auth0";
+import { config } from "~/config";
 import { baseFetcher } from "~/services/base";
 
-const fetcher = baseFetcher.extend({ prefixUrl: "http://localhost:3000/metadata" });
+const fetcher = baseFetcher.extend({ prefixUrl: config.services.endpoints.metadata });
 
 type Song = {
   id: string;

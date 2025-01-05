@@ -1,6 +1,4 @@
-import { Form } from "react-router";
 import { useAuth0 } from "@auth0/auth0-react";
-import { ClientOnly } from "~/utils/clientOnly";
 import { Button } from "~/components/ui/button";
 
 const LoginButton = () => {
@@ -19,7 +17,7 @@ export default function Login() {
   return (
     <div className="relative">
       <svg
-        className="fixed inset-0 w-screen h-screen z-0"
+        className="fixed inset-0 z-0 h-screen w-screen"
         id="visual"
         viewBox="0 0 960 540"
         xmlns="http://www.w3.org/2000/svg"
@@ -35,8 +33,8 @@ export default function Login() {
         </g>
       </svg>
 
-      <div className="relative z-10 flex items-center h-screen justify-center flex-col gap-10">
-        <h1 className="text-3xl font-bold ">Welcome to SoundScape</h1>
+      <div className="relative z-10 flex h-screen flex-col items-center justify-center gap-10">
+        <h1 className="text-3xl font-bold">Welcome to SoundScape</h1>
         <LoginButton />
       </div>
     </div>
