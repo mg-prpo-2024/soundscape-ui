@@ -3,6 +3,8 @@ import type { LinksFunction } from "react-router";
 import { Auth0Provider } from "@auth0/auth0-react";
 
 import "./tailwind.css";
+import { useInitAuth0Client } from "~/services/auth0";
+import { config } from "~/config";
 
 export const links: LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -44,13 +46,22 @@ export function Layout({ children }: { children: React.ReactNode }) {
 export default function App() {
   return (
     <Auth0Provider
-      domain="dev-2piaq4s.us.auth0.com"
-      clientId="C1yEUyfPTGICJC7xBwydqj3N7P3KiAFp"
+      domain={config.auth0.domain}
+      clientId={config.auth0.clientId}
       authorizationParams={{
         redirect_uri: typeof window !== "undefined" ? window.location.origin : "",
+        audience: config.auth0.audience,
+        scope: config.auth0.scope,
       }}
     >
-      <Outlet />
+      <GlobalAuthSetter>
+        <Outlet />
+      </GlobalAuthSetter>
     </Auth0Provider>
   );
+}
+
+function GlobalAuthSetter({ children }: { children: React.ReactNode }) {
+  useInitAuth0Client();
+  return children;
 }
