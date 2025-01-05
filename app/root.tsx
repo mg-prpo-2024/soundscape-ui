@@ -1,6 +1,8 @@
-import { Links, Meta, Outlet, Scripts, ScrollRestoration } from "react-router";
+import { Links, Meta, Outlet, Scripts, ScrollRestoration, useNavigate } from "react-router";
 import type { LinksFunction } from "react-router";
-import { Auth0Provider } from "@auth0/auth0-react";
+import { AppState, Auth0Provider } from "@auth0/auth0-react";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { Toaster } from "~/components/ui/sonner";
 
 import "./tailwind.css";
 import { useInitAuth0Client } from "~/services/auth0";
@@ -42,8 +44,14 @@ export function Layout({ children }: { children: React.ReactNode }) {
     </html>
   );
 }
+const queryClient = new QueryClient();
 
 export default function App() {
+  const navigate = useNavigate();
+  const onRedirectCallback = (appState: AppState | undefined) => {
+    navigate(appState?.returnTo || window.location.pathname);
+  };
+
   return (
     <Auth0Provider
       domain={config.auth0.domain}
@@ -53,9 +61,13 @@ export default function App() {
         audience: config.auth0.audience,
         scope: config.auth0.scope,
       }}
+      onRedirectCallback={onRedirectCallback}
     >
       <GlobalAuthSetter>
-        <Outlet />
+        <QueryClientProvider client={queryClient}>
+          <Outlet />
+          <Toaster />
+        </QueryClientProvider>
       </GlobalAuthSetter>
     </Auth0Provider>
   );

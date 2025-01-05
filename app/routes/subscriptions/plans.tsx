@@ -1,4 +1,6 @@
 import { Button } from "~/components/ui/button";
+import { toast } from "sonner";
+import { Loader2 } from "lucide-react";
 import {
   Card,
   CardContent,
@@ -10,6 +12,9 @@ import {
 import { Check } from "lucide-react";
 import * as users from "~/services/users";
 import { useAuth0 } from "@auth0/auth0-react";
+import { useMutation } from "@tanstack/react-query";
+import { useState } from "react";
+import { s } from "node_modules/vite/dist/node/types.d-aGj9QkWt";
 
 const plans = [
   {
@@ -43,22 +48,31 @@ const plans = [
 // TODO: handle unauthenticated scenario (send to login, after which the user should be redirected back to the plans page)
 
 export default function SpotifyPlans() {
+  const [selectedPlanId, setSelectedPlanId] = useState<string | null>(null);
   const { user } = useAuth0();
+  const mutation = useMutation({
+    mutationFn: users.subscribe,
+    onSuccess: (result) => {
+      console.log(result);
+      window.location.href = result.url;
+    },
+    onError: (error) => {
+      console.log(error);
+      toast.error("An error occurred. Please try again later.");
+      setSelectedPlanId(null);
+    },
+  });
 
   const handleChoosePlan = (planId: string) => {
     if (!user) return;
+    setSelectedPlanId(planId);
     const domain = window.origin;
-    const cancelUrl = `${domain}/subscriptions/cancel`;
+    const cancelUrl = `${domain}/plans`;
     const successUrl = `${domain}/subscriptions/success`;
     const userId = user.sub ?? "?";
-    users
-      .subscribe({ planId, userId, cancelUrl, successUrl })
-      .then((result) => {
-        console.log(result);
-        window.location.href = result.url;
-      })
-      .catch((err) => console.error(err));
+    mutation.mutate({ planId, userId, cancelUrl, successUrl });
   };
+
   return (
     <div className="container mx-auto py-10">
       <h1 className="mb-10 text-center text-4xl font-bold">Choose Your Plan</h1>
@@ -84,8 +98,16 @@ export default function SpotifyPlans() {
               </ul>
             </CardContent>
             <CardFooter>
-              <Button className="w-full" onClick={() => handleChoosePlan(plan.planId)}>
-                Choose Plan
+              <Button
+                className="w-full"
+                disabled={selectedPlanId !== null}
+                onClick={() => handleChoosePlan(plan.planId)}
+              >
+                {plan.planId === selectedPlanId ? (
+                  <Loader2 className="animate-spin" />
+                ) : (
+                  "Choose Plan"
+                )}
               </Button>
             </CardFooter>
           </Card>
