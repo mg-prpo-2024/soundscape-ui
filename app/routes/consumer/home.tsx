@@ -7,13 +7,14 @@ export const meta: MetaFunction = () => {
 };
 
 export default function Index() {
-  const { logout } = useAuth0();
+  const { user } = useAuth0();
+  const username = user?.given_name ?? "";
+
   return (
-    <div className="flex items-center justify-center">
+    <div className="flex flex-col px-8 pt-2">
+      <h1 className="text-xl font-bold">Welcome {username}!</h1>
       <div className="flex flex-col items-center gap-1">
-        <h1>Hello world</h1>
         <Button>Continue</Button>
-        <Button onClick={() => logout()}>Log Out</Button>
       </div>
     </div>
   );
