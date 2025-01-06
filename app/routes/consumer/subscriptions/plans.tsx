@@ -14,7 +14,6 @@ import * as users from "~/services/users";
 import { useAuth0 } from "@auth0/auth0-react";
 import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
-import { s } from "node_modules/vite/dist/node/types.d-aGj9QkWt";
 
 const plans = [
   {
