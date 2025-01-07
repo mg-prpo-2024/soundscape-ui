@@ -1,20 +1,27 @@
 import { useAuth0 } from "@auth0/auth0-react";
 import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
+import { useNavigate } from "react-router";
 import { toast } from "sonner";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { Textarea } from "~/components/ui/textarea";
 import * as upload from "~/services/upload";
 
+// TODO: implement image uploads
+
 export default function Create() {
   const { user } = useAuth0();
+  const navigate = useNavigate();
 
   const mutation = useMutation({
     mutationFn: upload.createArtist,
     onSuccess: (result) => {
       console.log(result);
       toast.success("Successfully created!");
+      setTimeout(() => {
+        navigate("/dashboard");
+      }, 500);
     },
     onError: (error) => {
       console.log(error);
@@ -31,8 +38,8 @@ export default function Create() {
   };
 
   return (
-    <section className="h-full p-12">
-      <h1 className="text-xl font-bold">Become an Artist</h1>
+    <div>
+      <h1 className="text-3xl font-bold">Become an Artist</h1>
       <div className="h-8" />
       <div className="flex flex-col gap-2">
         <Input onChange={(e) => setName(e.target.value)} placeholder="Your Name" />
@@ -45,6 +52,6 @@ export default function Create() {
           {mutation.isPending ? "loading" : "Create"}
         </Button>
       </div>
-    </section>
+    </div>
   );
 }
