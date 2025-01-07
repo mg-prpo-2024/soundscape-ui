@@ -7,9 +7,11 @@ export default [
       index("routes/consumer/home.tsx"),
       route("/artist/:artistId", "routes/consumer/artist.tsx"),
     ]),
-    layout("routes/dashboard/_layout.tsx", [
-      // index("routes/dashboard/home.tsx"),
-      route("/dashboard/create", "routes/dashboard/create.tsx"),
+    route("/dashboard", "routes/dashboard/_layout.tsx", [
+      index("routes/dashboard/home.tsx"),
+      route("create", "routes/dashboard/create.tsx"),
+      route("album/new", "routes/dashboard/new-album.tsx"),
+      route("album/:albumId", "routes/dashboard/album.tsx"),
     ]),
     route("/plans", "routes/consumer/subscriptions/plans.tsx"),
     route("/subscriptions/success", "routes/consumer/subscriptions/success.tsx"),

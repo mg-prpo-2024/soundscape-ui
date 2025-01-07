@@ -1,5 +1,6 @@
 import { useAuth0 } from "@auth0/auth0-react";
-import { Calendar, Home, Inbox, Search, Settings } from "lucide-react";
+import { Heart, Home, List, Search, Settings } from "lucide-react";
+import { Link } from "react-router";
 import { NavUser } from "~/components/nav-user";
 
 import {
@@ -14,7 +15,6 @@ import {
   SidebarMenuItem,
 } from "~/components/ui/sidebar";
 
-// Menu items.
 const items = [
   {
     title: "Home",
@@ -25,6 +25,16 @@ const items = [
     title: "Search",
     url: "#",
     icon: Search,
+  },
+  {
+    title: "Liked Songs",
+    url: "#",
+    icon: Heart,
+  },
+  {
+    title: "Playlists",
+    url: "#",
+    icon: List,
   },
   {
     title: "Settings",
@@ -50,10 +60,10 @@ export function AppSidebar() {
               {items.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild>
-                    <a href={item.url}>
+                    <Link to={item.url}>
                       <item.icon />
                       <span>{item.title}</span>
-                    </a>
+                    </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}

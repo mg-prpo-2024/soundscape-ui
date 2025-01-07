@@ -44,7 +44,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
     </html>
   );
 }
-const queryClient = new QueryClient();
+export const queryClient = new QueryClient();
 
 export default function App() {
   const navigate = useNavigate();

@@ -20,3 +20,72 @@ export async function createArtist({
     },
   });
 }
+
+export type Artist = {
+  id: string;
+  user_id: string;
+  name: string;
+  bio: string;
+};
+
+export async function getArtist(userId: string) {
+  return await fetcher.get<Artist>(`artists/${userId}`).json();
+}
+
+export type Album = {
+  id: string;
+  title: string;
+};
+
+export async function createAlbum({ title }: { title: string }) {
+  return await fetcher
+    .post("albums", {
+      json: {
+        title,
+      },
+    })
+    .json<Album>();
+}
+
+export async function getAlbum(id: string) {
+  return await fetcher.get<Album>(`albums/${id}`).json();
+}
+
+export async function createSong(song: {
+  title: string;
+  albumId: string;
+  artistId: string;
+  trackOrder: number;
+}) {
+  return await fetcher
+    .post("songs", {
+      json: {
+        title: song.title,
+        album_id: song.albumId,
+        artist_id: song.artistId,
+        track_order: song.trackOrder,
+      },
+    })
+    .json<{ id: string; upload_url: string }>();
+}
+
+export function uploadFile(uploadUrl: string, file: File) {
+  return fetch(uploadUrl, {
+    method: "PUT",
+    headers: {
+      "x-ms-blob-type": "BlockBlob",
+      "Content-Type": file.type,
+      "Content-Length": file.size.toString(),
+    },
+    body: file,
+  });
+}
+
+export type Song = {
+  id: string;
+  title: string;
+};
+
+export async function getAlbumSongs(id: string) {
+  return await fetcher.get<Album>(`albums/${id}/songs`).json<Song[]>();
+}
