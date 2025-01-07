@@ -89,3 +89,7 @@ export type Song = {
 export async function getAlbumSongs(id: string) {
   return await fetcher.get<Album>(`albums/${id}/songs`).json<Song[]>();
 }
+
+export async function deleteSong(id: string) {
+  return await fetcher.delete(`songs/${id}`);
+}

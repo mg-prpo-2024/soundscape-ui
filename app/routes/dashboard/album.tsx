@@ -200,9 +200,14 @@ function SongList({ albumId, artist }: { albumId: string; artist: upload.Artist 
 }
 
 function DeleteSongButton({ id }: { id: string }) {
-  // TODO: implement delete song endpoint
+  const mutation = useMutation({
+    mutationFn: upload.deleteSong,
+    onError(error) {
+      toast.error("An error occurred. Please try again later.");
+    },
+  });
   const handleDelete = () => {
-    console.log("Deleting song with id:", id);
+    mutation.mutate(id);
   };
   return (
     <Button variant="destructive" size="sm" onClick={handleDelete}>
