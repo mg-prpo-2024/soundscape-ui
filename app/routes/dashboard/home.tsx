@@ -36,7 +36,7 @@ export default function DashboardHome() {
           <div className="flex justify-between">
             <h2 className="font-bold">Your Albums</h2>
             <Button asChild>
-              <Link to="/dashboard/albums/new" className="flex items-center">
+              <Link to="/dashboard/album/new" className="flex items-center">
                 <Plus />
                 Create a New Album
               </Link>
