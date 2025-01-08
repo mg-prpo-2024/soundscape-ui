@@ -7,6 +7,7 @@ import { Toaster } from "~/components/ui/sonner";
 import "./tailwind.css";
 import { useInitAuth0Client } from "~/services/auth0";
 import { config } from "~/config";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 export const links: LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -44,7 +45,8 @@ export function Layout({ children }: { children: React.ReactNode }) {
     </html>
   );
 }
-export const queryClient = new QueryClient();
+
+const queryClient = new QueryClient();
 
 export default function App() {
   const navigate = useNavigate();
@@ -67,6 +69,7 @@ export default function App() {
         <QueryClientProvider client={queryClient}>
           <Outlet />
           <Toaster />
+          <ReactQueryDevtools initialIsOpen={false} />
         </QueryClientProvider>
       </GlobalAuthSetter>
     </Auth0Provider>
