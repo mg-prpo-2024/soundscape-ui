@@ -9,6 +9,7 @@ type Config = {
     endpoints: {
       users: string;
       upload: string;
+      metadata: string;
     };
   };
 };
@@ -24,6 +25,7 @@ const devConfig = {
     endpoints: {
       users: "http://localhost:8888",
       upload: "http://localhost:8080",
+      metadata: "http://localhost:8000",
     },
     // ... other stuff maybe
   },
@@ -40,6 +42,7 @@ const prodConfig = {
     endpoints: {
       users: "http://72.144.111.234",
       upload: "http://4.182.133.97",
+      metadata: "http://localhost:8000", // TODO: deploy and update url
     },
     // ... other stuff maybe
   },

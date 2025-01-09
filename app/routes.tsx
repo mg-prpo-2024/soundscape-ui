@@ -5,6 +5,7 @@ export default [
   layout("routes/auth/auth-guard.tsx", [
     layout("routes/consumer/_layout.tsx", [
       index("routes/consumer/home.tsx"),
+      route("/album/:albumId", "routes/consumer/album.tsx"),
       route("/artist/:artistId", "routes/consumer/artist.tsx"),
     ]),
     route("/dashboard", "routes/dashboard/_layout.tsx", [
