@@ -35,13 +35,15 @@ export async function getArtist(userId: string) {
 export type Album = {
   id: string;
   title: string;
+  created_at: string;
 };
 
-export async function createAlbum({ title }: { title: string }) {
+export async function createAlbum({ title, artistId }: { title: string; artistId: string }) {
   return await fetcher
     .post("albums", {
       json: {
         title,
+        artist_id: artistId,
       },
     })
     .json<Album>();
@@ -87,9 +89,13 @@ export type Song = {
 };
 
 export async function getAlbumSongs(id: string) {
-  return await fetcher.get<Album>(`albums/${id}/songs`).json<Song[]>();
+  return await fetcher.get(`albums/${id}/songs`).json<Song[]>();
 }
 
 export async function deleteSong(id: string) {
   return await fetcher.delete(`songs/${id}`);
+}
+
+export async function getArtistAlbums(id: string) {
+  return await fetcher.get(`artists/${id}/albums`).json<Album[]>();
 }

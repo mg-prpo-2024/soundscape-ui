@@ -4,9 +4,12 @@ import { useNavigate } from "react-router";
 import { toast } from "sonner";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
+import { Spinner } from "~/components/ui/spinner";
+import { useArtist } from "~/hooks/use-artist";
 import * as upload from "~/services/upload";
 
 export default function NewAlbum() {
+  const artist = useArtist();
   const [title, setTitle] = useState("");
   const navigate = useNavigate();
   const mutation = useMutation({
@@ -23,8 +26,15 @@ export default function NewAlbum() {
     },
   });
 
+  if (artist.isLoading) {
+    return <Spinner />;
+  }
+
   const handleCreateAlbum = () => {
-    mutation.mutate({ title });
+    if (!artist.data) {
+      return null;
+    }
+    mutation.mutate({ title, artistId: artist.data.id });
   };
 
   return (

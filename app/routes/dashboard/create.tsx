@@ -19,9 +19,7 @@ export default function Create() {
     onSuccess: (result) => {
       console.log(result);
       toast.success("Successfully created!");
-      setTimeout(() => {
-        navigate("/dashboard");
-      }, 500);
+      navigate("/dashboard");
     },
     onError: (error) => {
       console.log(error);
