@@ -121,7 +121,7 @@ function Carousel({
           {isLoading ? (
             <>
               {Array.from({ length: 8 }).map((_, i) => (
-                <Skeleton className="h-[240px] w-[200px] bg-[#181818]" />
+                <Skeleton key={i} className="h-[240px] w-[200px] bg-[#181818]" />
               ))}
             </>
           ) : (
