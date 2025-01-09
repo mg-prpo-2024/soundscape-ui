@@ -3,7 +3,7 @@ import { baseFetcher } from "~/services/base";
 
 const fetcher = baseFetcher.extend({ prefixUrl: config.services.endpoints.metadata });
 
-type Album = {
+export type Album = {
   id: string;
   title: string;
   created_at: string;
@@ -21,7 +21,7 @@ export async function getAlbum(id: string) {
   return await fetcher.get<Album>(`albums/${id}`).json();
 }
 
-type Song = {
+export type Song = {
   id: string;
   title: string;
 };
