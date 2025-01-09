@@ -18,7 +18,7 @@ import {
 const items = [
   {
     title: "Home",
-    url: "#",
+    url: "/",
     icon: Home,
   },
   {
@@ -45,7 +45,6 @@ const items = [
 
 export function AppSidebar() {
   const { user } = useAuth0();
-  console.log({ user });
 
   return (
     <Sidebar>
