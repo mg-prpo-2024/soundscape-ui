@@ -25,6 +25,7 @@
     "@react-router/remix-routes-option-adapter": "^7.1.1",
     "@react-router/serve": "^7.0.0",
     "@tanstack/react-query": "^5.62.15",
+    "@tanstack/react-query-devtools": "^5.63.0",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "isbot": "^4.1.0",

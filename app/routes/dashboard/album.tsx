@@ -1,10 +1,9 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { Loader2, MusicIcon } from "lucide-react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { Loader2, Music, MusicIcon } from "lucide-react";
 import type { Route } from "./+types/album";
 import { UploadIcon } from "lucide-react";
 import * as upload from "~/services/upload";
 import { Spinner } from "~/components/ui/spinner";
-import { Badge } from "~/components/ui/badge";
 import { useRef, useState } from "react";
 import { Label } from "~/components/ui/label";
 import { Input } from "~/components/ui/input";
@@ -19,7 +18,6 @@ import {
 } from "~/components/ui/table";
 import { useArtist } from "~/hooks/use-artist";
 import { toast } from "sonner";
-import { queryClient } from "~/root";
 
 export default function Album({ params }: Route.ComponentProps) {
   const albumId = params.albumId;
@@ -43,9 +41,9 @@ export default function Album({ params }: Route.ComponentProps) {
       <AlbumHeader albumName={albumResult.data.title} />
       <div className="h-6" />
       <SongForm albumId={albumResult.data.id} artistId={artistId} />
-      <div className="h-6" />
-      <div className="">
-        <h2>Songs</h2>
+      <div className="h-8" />
+      <div className="flex flex-col gap-4">
+        <h2 className="text-lg font-semibold">Songs</h2>
         <SongList artist={artistResult.data} albumId={albumResult.data.id} />
       </div>
     </section>
@@ -77,14 +75,17 @@ function SongForm({ albumId, artistId }: { albumId: string; artistId: string }) 
     title: "",
     file: null,
   });
+  const queryClient = useQueryClient();
   const mutation = useMutation({
     mutationFn: upload.createSong,
     onSuccess: (result) => {
-      console.log("song created", result);
       return upload.uploadFile(result.upload_url, formData.file as File).then(() => {
         toast.success("Song uploaded successfully!");
         queryClient.invalidateQueries({ queryKey: ["songs", albumId] });
         setFormData({ title: "", file: null });
+        if (fileInputRef.current) {
+          fileInputRef.current.value = "";
+        }
       });
     },
     onError: (error) => {
@@ -96,7 +97,9 @@ function SongForm({ albumId, artistId }: { albumId: string; artistId: string }) 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, files } = e.target;
     if (name === "file" && files) {
-      setFormData((prev) => ({ ...prev, [name]: files[0] }));
+      setFormData((prev) => {
+        return { title: prev.title || files[0].name, [name]: files[0] };
+      });
     } else {
       setFormData((prev) => ({ ...prev, [name]: value }));
     }
@@ -106,11 +109,6 @@ function SongForm({ albumId, artistId }: { albumId: string; artistId: string }) 
     e.preventDefault();
     console.log("Submitting song:", formData);
     mutation.mutate({ title: formData.title, albumId, artistId, trackOrder: 1 });
-    // TODO: move to onSuccess
-    // setFormData({ title: "", file: null });
-    // if (fileInputRef.current) {
-    //   fileInputRef.current.value = "";
-    // }
   };
 
   return (
@@ -158,8 +156,18 @@ function SongList({ albumId, artist }: { albumId: string; artist: upload.Artist 
     return null;
   }
 
-  console.log("songs", result.data);
   const songs = result.data;
+  if (songs.length === 0) {
+    return (
+      <div className="rounded-lg border border-dashed p-8 text-center">
+        <Music className="mx-auto h-12 w-12 text-muted-foreground" />
+        <h3 className="mt-4 text-lg font-semibold">No songs in this album</h3>
+        <p className="mt-2 text-sm text-muted-foreground">
+          Get started by adding a new song to your album.
+        </p>
+      </div>
+    );
+  }
 
   return (
     <Table>
@@ -193,9 +201,11 @@ function SongList({ albumId, artist }: { albumId: string; artist: upload.Artist 
 }
 
 function DeleteSongButton({ id, albumId }: { id: string; albumId: string }) {
+  const queryClient = useQueryClient();
   const mutation = useMutation({
     mutationFn: upload.deleteSong,
     onSuccess() {
+      console.log("invalidating", ["songs", albumId]);
       queryClient.invalidateQueries({ queryKey: ["songs", albumId] });
     },
     onError(error) {
@@ -207,7 +217,7 @@ function DeleteSongButton({ id, albumId }: { id: string; albumId: string }) {
   };
   return (
     <Button variant="destructive" size="sm" onClick={handleDelete}>
-      Delete{" "}
+      {mutation.isPending ? <Loader2 className="animate-spin" /> : "Delete"}
     </Button>
   );
 }

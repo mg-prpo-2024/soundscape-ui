@@ -38,8 +38,8 @@ const prodConfig = {
   },
   services: {
     endpoints: {
-      users: "http://72.144.96.197/",
-      upload: "http://localhost:8080", // TODO
+      users: "http://72.144.111.234",
+      upload: "http://4.182.133.97",
     },
     // ... other stuff maybe
   },
