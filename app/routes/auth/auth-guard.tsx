@@ -4,7 +4,7 @@ import { Spinner } from "~/components/ui/spinner";
 
 const Component = withAuthenticationRequired(() => <Outlet />, {
   onRedirecting: () => <div>redirecting...</div>,
-  returnTo: window.location.pathname,
+  returnTo: typeof window !== "undefined" ? window.location.pathname : "",
 });
 
 export default function AuthenticationGuard() {
