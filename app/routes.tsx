@@ -7,6 +7,9 @@ export default [
       index("routes/consumer/home.tsx"),
       route("album/:albumId", "routes/consumer/album.tsx"),
       route("artist/:artistId", "routes/consumer/artist.tsx"),
+      route("playlists", "routes/consumer/playlists.tsx"),
+      route("playlist/:playlistId", "routes/consumer/playlist.tsx"),
+      route("liked-songs", "routes/consumer/liked-songs.tsx"),
     ]),
     route("/dashboard", "routes/dashboard/_layout.tsx", [
       index("routes/dashboard/home.tsx"),
