@@ -6,5 +6,5 @@ export default {
   future: {
     unstable_optimizeDeps: true,
   },
-  ssr: true,
+  ssr: false,
 } satisfies Config;
