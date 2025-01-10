@@ -2,7 +2,12 @@ import { useAuth0, withAuthenticationRequired } from "@auth0/auth0-react";
 import { Outlet } from "react-router";
 import { Spinner } from "~/components/ui/spinner";
 
-export default function AuthenticationGuard({ children }: { children: React.ReactNode }) {
+const Component = withAuthenticationRequired(() => <Outlet />, {
+  onRedirecting: () => <div>redirecting...</div>,
+  returnTo: typeof window !== "undefined" ? window.location.pathname : "",
+});
+
+export default function AuthenticationGuard() {
   const { isLoading } = useAuth0();
   if (isLoading) {
     return (
@@ -11,17 +16,6 @@ export default function AuthenticationGuard({ children }: { children: React.Reac
       </div>
     );
   }
-  const Component = withAuthenticationRequired(
-    () => (
-      <>
-        {children}
-        <Outlet />
-      </>
-    ),
-    {
-      onRedirecting: () => <div>redirecting...</div>,
-      returnTo: window.location.pathname,
-    },
-  );
+  // return <Outlet />; // TODO: redirect to login page
   return <Component />;
 }

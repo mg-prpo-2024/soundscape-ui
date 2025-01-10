@@ -1,11 +1,13 @@
 import { Pause, Play } from "lucide-react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, memo } from "react";
 import { Button } from "~/components/ui/button";
 import { AudioResource, usePlayerStore } from "~/lib/playerState";
 
-export function AudioPlayer() {
-  const store = usePlayerStore();
-  if (!store.audio) {
+export const AudioPlayer = memo(AudioPlayerComponent);
+
+function AudioPlayerComponent() {
+  const audio = usePlayerStore((store) => store.audio);
+  if (!audio) {
     return (
       <PlayerWrapper>
         <div className="flex h-full items-center justify-center">
@@ -16,10 +18,9 @@ export function AudioPlayer() {
       </PlayerWrapper>
     );
   }
-
   return (
     <PlayerWrapper>
-      <AudioPlayerWithSong key={store.audio.id} audio={store.audio} />
+      <AudioPlayerWithSong key={audio.id} audio={audio} />
     </PlayerWrapper>
   );
 }
@@ -54,22 +55,26 @@ function AudioPlayerWithSong({ audio }: { audio: AudioResource }) {
 }
 
 function useAudio(url: string) {
-  const store = usePlayerStore();
-  const [audio] = useState(new Audio(url));
+  const isPlaying = usePlayerStore((state) => state.isPlaying);
+  const setIsPlaying = usePlayerStore((state) => state.setIsPlaying);
+  const [audio] = useState(() => {
+    console.log("Creating audio element");
+    return new Audio(url);
+  });
   const [duration, setDuration] = useState(0);
   const [time, setTime] = useState(0);
 
   useEffect(() => {
-    if (store.isPlaying) {
+    if (isPlaying) {
       audio.play();
     } else {
       audio.pause();
     }
-  }, [store.isPlaying]);
+  }, [isPlaying]);
 
   useEffect(() => {
     const controller = new AbortController();
-    audio.addEventListener("ended", () => store.setIsPlaying(false), {
+    audio.addEventListener("ended", () => setIsPlaying(false), {
       signal: controller.signal,
     });
     audio.addEventListener("durationchange", () => setDuration(audio.duration), {

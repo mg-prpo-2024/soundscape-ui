@@ -42,7 +42,7 @@ const prodConfig = {
     endpoints: {
       users: "http://72.144.111.234",
       upload: "http://4.182.133.97",
-      metadata: "http://localhost:8000", // TODO: deploy and update url
+      metadata: "http://72.144.120.236",
     },
     // ... other stuff maybe
   },

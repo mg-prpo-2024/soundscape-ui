@@ -126,8 +126,8 @@ function Carousel({
             </>
           ) : (
             items.map((item) => (
-              <Link to={item.link ?? "/"}>
-                <div key={item.id} className="w-[200px] shrink-0">
+              <Link key={item.id} to={item.link ?? "/"}>
+                <div className="w-[200px] shrink-0">
                   <div className="group relative rounded-lg bg-[#181818] p-4 transition-colors hover:bg-[#282828]">
                     <img
                       src={item.image}
