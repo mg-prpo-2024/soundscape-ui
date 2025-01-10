@@ -73,7 +73,7 @@ function Song({ song, idx, album }: { song: metadata.Song; idx: number; album: m
   };
 
   return (
-    <div key={song.id} className="flex items-center gap-3 rounded-md px-5 py-2 hover:bg-gray-900">
+    <div className="flex items-center gap-3 rounded-md px-5 py-2 hover:bg-gray-900">
       <div className="w-4 text-gray-400">{idx + 1}</div>
       <div className="flex flex-col">
         <h2 className="font-normal">{song.title}</h2>
