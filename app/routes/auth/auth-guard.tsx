@@ -2,6 +2,11 @@ import { useAuth0, withAuthenticationRequired } from "@auth0/auth0-react";
 import { Outlet } from "react-router";
 import { Spinner } from "~/components/ui/spinner";
 
+const Component = withAuthenticationRequired(() => <Outlet />, {
+  onRedirecting: () => <div>redirecting...</div>,
+  returnTo: window.location.pathname,
+});
+
 export default function AuthenticationGuard() {
   const { isLoading } = useAuth0();
   if (isLoading) {
@@ -11,10 +16,6 @@ export default function AuthenticationGuard() {
       </div>
     );
   }
-  return <Outlet />; // TODO: redirect to login page
-  const Component = withAuthenticationRequired(() => <Outlet />, {
-    onRedirecting: () => <div>redirecting...</div>,
-    returnTo: window.location.pathname,
-  });
+  // return <Outlet />; // TODO: redirect to login page
   return <Component />;
 }
