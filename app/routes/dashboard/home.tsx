@@ -90,7 +90,6 @@ function AlbumGrid({ artistId }: { artistId: string }) {
   if (!albums) {
     return null;
   }
-  console.log("albums", albums);
 
   if (albums.length === 0) {
     return <AlbumsEmptyState />;

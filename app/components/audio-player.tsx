@@ -58,7 +58,6 @@ function useAudio(url: string) {
   const isPlaying = usePlayerStore((state) => state.isPlaying);
   const setIsPlaying = usePlayerStore((state) => state.setIsPlaying);
   const [audio] = useState(() => {
-    console.log("Creating audio element");
     return new Audio(url);
   });
   const [duration, setDuration] = useState(0);

@@ -42,7 +42,6 @@ function PlaylistList() {
     queryKey: ["playlists"],
     queryFn: () => favorites.getPlaylists(),
   });
-  console.log("playlists", result.data);
 
   if (result.isLoading) {
     return <div>Loading...</div>;

@@ -37,7 +37,6 @@ export default function Album({ params }: Route.ComponentProps) {
   const songs = songsResult.data;
   const songChecks = songChecksResult.data;
   if (!album || !songs || !songChecks) return null;
-  console.log("song checks", songChecksResult.data);
 
   return (
     <section className="min-h-screen">
