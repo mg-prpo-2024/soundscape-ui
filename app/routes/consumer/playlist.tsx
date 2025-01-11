@@ -7,6 +7,7 @@ import { Spinner } from "~/components/ui/spinner";
 import { Delete, Heart, Pause, Play } from "lucide-react";
 import { usePlayerStore } from "~/lib/playerState";
 import { toast } from "sonner";
+import { Song } from "~/components/song";
 
 export default function Playlist({ params }: Route.ComponentProps) {
   const { playlistId } = params;
@@ -20,6 +21,12 @@ export default function Playlist({ params }: Route.ComponentProps) {
     queryFn: () => favorites.getPlaylist(playlistId),
   });
 
+  const songIds = result.data?.songs.map((song) => song.id) ?? [];
+  const songChecksResult = useQuery({
+    queryKey: ["song-checks", ...songIds],
+    queryFn: () => favorites.checkSongs(songIds),
+  });
+
   if (result.isLoading) {
     return (
       <div className="flex flex-1 items-center justify-center">
@@ -28,7 +35,8 @@ export default function Playlist({ params }: Route.ComponentProps) {
     );
   }
   const playlist = result.data;
-  if (!playlist) return null;
+  const songChecks = songChecksResult.data;
+  if (!playlist || !songChecks) return null;
   console.log("playlist", playlist);
   return (
     <div>
@@ -36,62 +44,40 @@ export default function Playlist({ params }: Route.ComponentProps) {
       <h2 className="text-3xl font-bold">{playlist.name}</h2>
       <div className="mt-5">
         {playlist.songs.map((song, idx) => {
-          return <Song key={song.id} song={song} playlistId={playlist.id} idx={idx} />;
+          return (
+            <Song
+              key={song.id}
+              song={song}
+              artist="artist name"
+              idx={idx}
+              showPlaylistDropdown={false}
+              actions={<RemoveFromPlaylistButton playlistId={playlistId} songId={song.id} />}
+              isLiked={idx < songChecks.length && songChecks[idx]}
+            />
+          );
         })}
       </div>
     </div>
   );
 }
 
-function Song({
-  song,
-  playlistId,
-  idx,
-}: {
-  song: metadata.SongFull;
-  playlistId: string;
-  idx: number;
-}) {
-  const store = usePlayerStore();
+function RemoveFromPlaylistButton({ playlistId, songId }: { playlistId: string; songId: string }) {
   const queryClient = useQueryClient();
   const mutation = useMutation({
-    mutationFn: () => favorites.removeSongFromPlaylist({ playlistId, songId: song.id }),
+    mutationFn: () => favorites.removeSongFromPlaylist({ playlistId, songId }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["playlist", playlistId] });
       toast.success("Song removed from playlist");
     },
   });
 
-  const handleToggle = () => {
-    if (!store.isPlaying || (store.isPlaying && store.audio?.id !== song.id)) {
-      store.playAudio({ id: song.id, title: song.title });
-    } else {
-      store.toggle();
-    }
-  };
-
   const handleRemove = () => {
     mutation.mutate();
   };
 
   return (
-    <div className="flex items-center gap-3 rounded-md px-5 py-2 hover:bg-gray-900">
-      <div className="w-4 text-gray-400">{idx + 1}</div>
-      <div className="flex flex-col">
-        <h2 className="font-normal">{song.title}</h2>
-        {/* <span className="text-xs text-gray-400">{album.artist.name}</span> */}
-      </div>
-
-      <Button onClick={handleRemove} size="icon" className="ml-auto rounded-full" variant="ghost">
-        <Delete />
-      </Button>
-      <Button size="icon" className="rounded-full" variant="ghost">
-        <Heart />
-        {/* TODO: <HeartFilledIcon /> */}
-      </Button>
-      <Button onClick={handleToggle} size="icon" className="rounded-full">
-        {store.isPlaying && store.audio?.id === song.id ? <Pause /> : <Play />}
-      </Button>
-    </div>
+    <Button onClick={handleRemove} size="icon" className="ml-auto rounded-full" variant="ghost">
+      <Delete />
+    </Button>
   );
 }
