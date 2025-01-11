@@ -51,3 +51,22 @@ export async function removeSongFromPlaylist({
 }) {
   return await fetcher.delete(`playlists/${playlistId}/songs/${songId}`, {});
 }
+
+export async function getLikedSongs() {
+  return await fetcher.get("songs").json<metadata.SongFull[]>();
+}
+
+export async function likeSong(songId: string) {
+  return await fetcher.post("songs", {
+    json: { song_id: songId },
+  });
+}
+
+export async function unlikeSong(songId: string) {
+  return await fetcher.delete(`songs/${songId}`, {});
+}
+
+export async function checkSongs(songIds: string[]) {
+  if (songIds.length === 0) return [];
+  return await fetcher.get(`songs/check?ids=${songIds.join(",")}`).json<boolean[]>();
+}
