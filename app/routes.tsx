@@ -10,6 +10,7 @@ export default [
       route("playlists", "routes/consumer/playlists.tsx"),
       route("playlist/:playlistId", "routes/consumer/playlist.tsx"),
       route("liked-songs", "routes/consumer/liked-songs.tsx"),
+      route("account", "routes/consumer/account.tsx"),
     ]),
     route("/dashboard", "routes/dashboard/_layout.tsx", [
       index("routes/dashboard/home.tsx"),
