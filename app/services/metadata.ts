@@ -29,3 +29,8 @@ export type Song = {
 export async function getAlbumSongs(id: string) {
   return await fetcher.get(`albums/${id}/songs`).json<Song[]>();
 }
+
+export type SongFull = {
+  id: string;
+  title: string;
+};

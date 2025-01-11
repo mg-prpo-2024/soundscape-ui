@@ -10,6 +10,8 @@ type Config = {
       users: string;
       upload: string;
       metadata: string;
+      favorites: string;
+      storage: string;
     };
   };
 };
@@ -26,6 +28,8 @@ const devConfig = {
       users: "http://localhost:8888",
       upload: "http://localhost:8080",
       metadata: "http://localhost:8000",
+      favorites: "http://localhost:8001",
+      storage: "", // TODO
     },
     // ... other stuff maybe
   },
@@ -43,6 +47,8 @@ const prodConfig = {
       users: "http://72.144.111.234",
       upload: "http://4.182.133.97",
       metadata: "http://72.144.120.236",
+      favorites: "", // TODO:
+      storage: "", // TODO:
     },
     // ... other stuff maybe
   },
