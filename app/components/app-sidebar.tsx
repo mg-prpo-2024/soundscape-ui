@@ -28,12 +28,12 @@ const items = [
   },
   {
     title: "Liked Songs",
-    url: "#",
+    url: "/liked-songs",
     icon: Heart,
   },
   {
     title: "Playlists",
-    url: "#",
+    url: "/playlists",
     icon: List,
   },
   {

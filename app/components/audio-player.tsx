@@ -85,6 +85,7 @@ function useAudio(url: string) {
     });
     return () => {
       controller.abort();
+      audio.pause();
     };
   }, []);
 

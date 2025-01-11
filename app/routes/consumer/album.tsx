@@ -1,13 +1,23 @@
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import type { Route } from "./+types/album";
 import * as metadata from "~/services/metadata";
+import * as favorites from "~/services/favorites";
 import { Spinner } from "~/components/ui/spinner";
 import placeholder from "~/assets/placeholder.svg";
 import { Link } from "react-router";
-import { Heart, Pause, Play } from "lucide-react";
+import { Heart, Loader, Pause, Play, PlusCircle } from "lucide-react";
 import { Button } from "~/components/ui/button";
 import { HeartFilledIcon } from "@radix-ui/react-icons";
 import { usePlayerStore } from "~/lib/playerState";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "~/components/ui/dropdown-menu";
+import { toast } from "sonner";
 
 export default function Album({ params }: Route.ComponentProps) {
   const { albumId } = params;
@@ -68,8 +78,11 @@ function Song({ song, idx, album }: { song: metadata.Song; idx: number; album: m
   const store = usePlayerStore();
 
   const handleToggle = () => {
-    store.setAudio({ id: song.id, title: song.title });
-    store.toggle();
+    if (!store.isPlaying || (store.isPlaying && store.audio?.id !== song.id)) {
+      store.playAudio({ id: song.id, title: song.title });
+    } else {
+      store.toggle();
+    }
   };
 
   return (
@@ -79,7 +92,8 @@ function Song({ song, idx, album }: { song: metadata.Song; idx: number; album: m
         <h2 className="font-normal">{song.title}</h2>
         <span className="text-xs text-gray-400">{album.artist.name}</span>
       </div>
-      <Button size="icon" className="ml-auto rounded-full" variant="ghost">
+      <PlaylistDropdown songId={song.id} className="ml-auto" />
+      <Button size="icon" className="rounded-full" variant="ghost">
         <Heart />
         {/* TODO: <HeartFilledIcon /> */}
       </Button>
@@ -87,5 +101,47 @@ function Song({ song, idx, album }: { song: metadata.Song; idx: number; album: m
         {store.isPlaying && store.audio?.id === song.id ? <Pause /> : <Play />}
       </Button>
     </div>
+  );
+}
+
+function PlaylistDropdown({ songId }: { songId: string; className?: string }) {
+  const result = useQuery({
+    queryKey: ["playlists"],
+    queryFn: () => favorites.getPlaylists(),
+  });
+  const mutation = useMutation({
+    mutationFn: (playlistId: string) => favorites.addSongToPlaylist({ playlistId, songId }),
+    onSuccess: () => {
+      toast.success("Song added to playlist");
+    },
+    onError: (err) => {
+      console.error(err);
+      toast.error("Unexpected error");
+    },
+  });
+
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button size="icon" className="ml-auto rounded-full" variant="ghost">
+          <PlusCircle />
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="start" side="left">
+        <DropdownMenuLabel>Your Playlists</DropdownMenuLabel>
+        <DropdownMenuSeparator />
+        {result.isLoading ? (
+          <Spinner />
+        ) : (
+          result.data?.map((playlist) => {
+            return (
+              <DropdownMenuItem onSelect={() => mutation.mutate(playlist.id)}>
+                {playlist.name}
+              </DropdownMenuItem>
+            );
+          })
+        )}
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 }
