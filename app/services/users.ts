@@ -25,3 +25,14 @@ export async function subscribe({
     })
     .json<{ id: string; url: string }>();
 }
+
+type User = {
+  auth0_id: string;
+  email: string;
+  id: string;
+  stripe_customer_id?: string;
+};
+
+export async function getUser(userId: string) {
+  return await fetcher.get(`users/${userId}`).json<User>();
+}
