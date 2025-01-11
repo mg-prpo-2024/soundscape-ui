@@ -37,7 +37,7 @@ export default function Playlist({ params }: Route.ComponentProps) {
   const playlist = result.data;
   const songChecks = songChecksResult.data;
   if (!playlist || !songChecks) return null;
-  console.log("playlist", playlist);
+
   return (
     <div>
       <div className="text-sm">Playlist</div>

@@ -106,14 +106,12 @@ function LikeButton({ songId, isLiked }: { songId: string; isLiked: boolean }) {
   const likeMutation = useMutation({
     mutationFn: () => favorites.likeSong(songId),
     onSuccess: () => {
-      console.log("liked");
       queryClient.invalidateQueries({ queryKey: ["song-checks"] });
     },
   });
   const unlikeMutation = useMutation({
     mutationFn: () => favorites.unlikeSong(songId),
     onSuccess: () => {
-      console.log("liked");
       queryClient.invalidateQueries({ queryKey: ["song-checks"] });
       queryClient.invalidateQueries({ queryKey: ["liked-songs"] });
     },

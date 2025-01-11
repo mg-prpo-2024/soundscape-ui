@@ -47,7 +47,7 @@ const prodConfig = {
       users: "http://72.144.111.234",
       upload: "http://4.182.133.97",
       metadata: "http://72.144.120.236",
-      favorites: "", // TODO:
+      favorites: "http://4.182.130.71",
       storage: "", // TODO:
     },
     // ... other stuff maybe

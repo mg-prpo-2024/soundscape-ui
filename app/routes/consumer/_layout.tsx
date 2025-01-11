@@ -5,9 +5,6 @@ import { AudioPlayer } from "~/components/audio-player";
 import { useState } from "react";
 
 export default function Layout() {
-  useState(() => {
-    console.log("Mounting component");
-  });
   return (
     <>
       <SidebarProvider>

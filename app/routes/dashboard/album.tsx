@@ -107,7 +107,6 @@ function SongForm({ albumId, artistId }: { albumId: string; artistId: string }) 
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Submitting song:", formData);
     mutation.mutate({ title: formData.title, albumId, artistId, trackOrder: 1 });
   };
 
